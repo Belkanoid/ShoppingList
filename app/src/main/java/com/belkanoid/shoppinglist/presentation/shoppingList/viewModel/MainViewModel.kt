@@ -8,7 +8,7 @@ import com.belkanoid.shoppinglist.domain.useCases.*
 
 class MainViewModel : ViewModel() {
 
-    private val repository = ShoppingListRepositoryImpl()
+    private val repository = ShoppingListRepositoryImpl
 
     private val getShoppingListUseCase = getShoppingListUseCase(repository)
     private val getShoppingDeleteUseCase = deleteShoppingItemUseCase(repository)

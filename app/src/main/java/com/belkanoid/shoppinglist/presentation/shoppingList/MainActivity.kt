@@ -1,13 +1,13 @@
 package com.belkanoid.shoppinglist.presentation.shoppingList
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.belkanoid.shoppinglist.databinding.ActivityMainBinding
+import com.belkanoid.shoppinglist.presentation.shoppingItem.ShoppingItemActivity
 import com.belkanoid.shoppinglist.presentation.shoppingList.adapter.ShoppingAdapter
 import com.belkanoid.shoppinglist.presentation.shoppingList.adapter.ShoppingAdapter.Companion.DISABLED_VIEW_TYPE
 import com.belkanoid.shoppinglist.presentation.shoppingList.adapter.ShoppingAdapter.Companion.ENABLED_VIEW_TYPE
@@ -29,12 +29,17 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.shoppingList.observe(this) {
             shoppingAdapter.submitList(it)
         }
-        setUpAdapter()
+        setRecyclerView()
+
+        binding.shoppingAddButton.setOnClickListener{
+            val intent = ShoppingItemActivity.newIntentAddMode(this@MainActivity)
+            startActivity(intent)
+        }
 
 
     }
 
-    private fun setUpAdapter() {
+    private fun setRecyclerView() {
         binding.shoppingListRecyclerview.apply {
             shoppingAdapter = ShoppingAdapter()
             adapter = shoppingAdapter
@@ -49,7 +54,8 @@ class MainActivity : AppCompatActivity() {
                 mainViewModel.updateShoppingItem(it)
             }
             onShoppingItemOnClickListener = {
-                Toast.makeText(applicationContext, it.toString(), Toast.LENGTH_SHORT).show()
+                val intent = ShoppingItemActivity.newIntentEditMode(this@MainActivity, it.id)
+                startActivity(intent)
             }
         }
         simpleSwipeCallback()

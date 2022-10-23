@@ -9,7 +9,7 @@ import java.lang.RuntimeException
 import kotlin.math.abs
 import kotlin.random.Random
 
-class ShoppingListRepositoryImpl : ShoppingListRepository{
+object ShoppingListRepositoryImpl : ShoppingListRepository{
 
     private val _shoppingList = sortedSetOf<ShoppingItem>({e1, e2 -> e1.id.compareTo(e2.id) })
     private val observableShoppingList : MutableLiveData<List<ShoppingItem>> = MutableLiveData()
@@ -60,5 +60,6 @@ class ShoppingListRepositoryImpl : ShoppingListRepository{
     private fun updateShoppingList() {
         observableShoppingList.value = _shoppingList.toList()
     }
+
 
 }
