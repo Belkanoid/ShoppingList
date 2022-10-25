@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.belkanoid.shoppinglist.databinding.ActivityMainBinding
 import com.belkanoid.shoppinglist.presentation.shoppingItem.ShoppingItemActivity
+import com.belkanoid.shoppinglist.presentation.shoppingItem.ShoppingItemFragment
 import com.belkanoid.shoppinglist.presentation.shoppingList.adapter.ShoppingAdapter
 import com.belkanoid.shoppinglist.presentation.shoppingList.adapter.ShoppingAdapter.Companion.DISABLED_VIEW_TYPE
 import com.belkanoid.shoppinglist.presentation.shoppingList.adapter.ShoppingAdapter.Companion.ENABLED_VIEW_TYPE
@@ -32,11 +33,26 @@ class MainActivity : AppCompatActivity() {
         setRecyclerView()
 
         binding.shoppingAddButton.setOnClickListener{
-            val intent = ShoppingItemActivity.newIntentAddMode(this@MainActivity)
-            startActivity(intent)
+            if (isPaneOrientation()) {
+                val intent = ShoppingItemActivity.newIntentAddMode(this@MainActivity)
+                startActivity(intent)
+            } else attachFragment(ShoppingItemFragment.newInstanceAddMode())
+
         }
 
 
+    }
+
+    private fun isPaneOrientation() : Boolean{
+        return binding.containerShoppingItem == null
+    }
+
+    private fun attachFragment(fragment: ShoppingItemFragment) {
+        supportFragmentManager.popBackStack()
+        supportFragmentManager.beginTransaction()
+            .add(binding.containerShoppingItem!!.id, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun setRecyclerView() {
@@ -54,8 +70,12 @@ class MainActivity : AppCompatActivity() {
                 mainViewModel.updateShoppingItem(it)
             }
             onShoppingItemOnClickListener = {
-                val intent = ShoppingItemActivity.newIntentEditMode(this@MainActivity, it.id)
-                startActivity(intent)
+                if (isPaneOrientation()) {
+                    val intent = ShoppingItemActivity.newIntentEditMode(this@MainActivity, it.id)
+                    startActivity(intent)
+                } else attachFragment(ShoppingItemFragment.newInstanceEditMode(it.id))
+
+
             }
         }
         simpleSwipeCallback()

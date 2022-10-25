@@ -13,9 +13,6 @@ import com.belkanoid.shoppinglist.presentation.shoppingItem.viewModel.ShoppingIt
 
 class ShoppingItemActivity : AppCompatActivity() {
     private lateinit var binding: ActivityShoppingItemBinding
-    private val shoppingItemViewModel by lazy {
-        ViewModelProvider(this)[ShoppingItemViewModel::class.java]
-    }
 
     private var screenMode: String = UNDEFINED_MODE
     private var shoppingItemId: Int = UNDEFINED_ID
@@ -25,74 +22,26 @@ class ShoppingItemActivity : AppCompatActivity() {
         binding = ActivityShoppingItemBinding.inflate(layoutInflater)
         setContentView(binding.root)
         parseIntent()
-        launchRightMode()
-        observeViewModel()
+        if (savedInstanceState == null)
+            launchRightMode()
 
     }
 
-    private fun observeViewModel() {
-
-        shoppingItemViewModel.errorInputName.observe(this@ShoppingItemActivity) {
-            val message = if (it) {
-                getString(R.string.error_input_name)
-            } else {
-                null
-            }
-            binding.shoppingItemWrapperName.error = message
-        }
-        shoppingItemViewModel.errorInputCount.observe(this@ShoppingItemActivity) {
-            val message = if (it) {
-                getString(R.string.error_input_count)
-            } else {
-                null
-            }
-            binding.shoppingItemWrapperCount.error = message
-        }
-
-        binding.shoppingItemName.doOnTextChanged { text, start, before, count ->
-            shoppingItemViewModel.resetErrorInputName()
-        }
-        binding.shoppingItemCount.doOnTextChanged { text, start, before, count ->
-            shoppingItemViewModel.resetErrorInputCount()
-        }
-
-        shoppingItemViewModel.shouldCloseScreen.observe(this) {
-            finish()
-        }
-    }
+//
 
     private fun launchRightMode() {
-        when (screenMode) {
-            MODE_ADD -> launchAddMode()
-            MODE_EDIT -> launchEditMode()
+        val fragment = when (screenMode) {
+            MODE_ADD -> ShoppingItemFragment.newInstanceAddMode()
+            MODE_EDIT -> ShoppingItemFragment.newInstanceEditMode(shoppingItemId)
             else -> throw RuntimeException("undefined screen mode: $screenMode")
         }
+        supportFragmentManager.beginTransaction()
+            .add(R.id.container_shopping_item, fragment)
+            .commit()
+
 
     }
 
-    private fun launchAddMode() {
-        binding.saveButton.setOnClickListener {
-            shoppingItemViewModel.addShoppingItem(
-                binding.shoppingItemName.text.toString(),
-                binding.shoppingItemCount.text.toString()
-            )
-        }
-    }
-
-    private fun launchEditMode() {
-        shoppingItemViewModel.getShoppingItem(shoppingItemId)
-        shoppingItemViewModel.shoppingItem.observe(this@ShoppingItemActivity) {
-            binding.shoppingItemName.setText(it.name)
-            binding.shoppingItemCount.setText(it.count.toString())
-        }
-        binding.saveButton.setOnClickListener {
-            shoppingItemViewModel.updateShoppingItem(
-                binding.shoppingItemName.text.toString(),
-                binding.shoppingItemCount.text.toString()
-            )
-        }
-
-    }
 
     private fun parseIntent() {
         if (!intent.hasExtra(EXTRA_SCREEN_MODE))
