@@ -1,5 +1,6 @@
 package com.belkanoid.shoppinglist.presentation.shoppingItem
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -24,7 +25,17 @@ class ShoppingItemFragment : Fragment() {
 
     private var screenMode: String = UNDEFINED_SCREEN_MODE
     private var shoppingItemId: Int = UNDEFINED_ID
+    private lateinit var onEditingFinishListener: OnEditingFinishListener
 
+
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnEditingFinishListener)
+            onEditingFinishListener = context
+        else
+            throw RuntimeException("activity not implemented OnEditingFinishListener")
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -82,7 +93,7 @@ class ShoppingItemFragment : Fragment() {
         }
 
         shoppingItemViewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-            activity?.onBackPressed()
+            onEditingFinishListener.onFinish()
         }
     }
 
@@ -120,7 +131,14 @@ class ShoppingItemFragment : Fragment() {
 
     }
 
+
+    interface OnEditingFinishListener {
+
+        fun onFinish()
+
+    }
     companion object {
+
         private const val SCREEN_MODE = "screen_mode"
         private const val SHOPPING_ITEM_ID = "shopping_id"
         private const val MODE_ADD = "mode_add"

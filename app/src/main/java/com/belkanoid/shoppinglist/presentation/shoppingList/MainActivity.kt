@@ -15,7 +15,7 @@ import com.belkanoid.shoppinglist.presentation.shoppingList.adapter.ShoppingAdap
 import com.belkanoid.shoppinglist.presentation.shoppingList.adapter.ShoppingAdapter.Companion.MAX_POOL_SIZE
 import com.belkanoid.shoppinglist.presentation.shoppingList.viewModel.MainViewModel
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ShoppingItemFragment.OnEditingFinishListener {
     private lateinit var binding: ActivityMainBinding
     private val mainViewModel by lazy {
         ViewModelProvider(this)[MainViewModel::class.java]
@@ -104,6 +104,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         ItemTouchHelper(callback).attachToRecyclerView(binding.shoppingListRecyclerview)
+    }
+
+    override fun onFinish() {
+        supportFragmentManager.popBackStack()
     }
 
 }

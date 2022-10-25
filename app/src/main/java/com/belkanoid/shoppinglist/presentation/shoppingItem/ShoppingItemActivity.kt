@@ -11,7 +11,7 @@ import com.belkanoid.shoppinglist.databinding.ActivityShoppingItemBinding
 import com.belkanoid.shoppinglist.domain.model.ShoppingItem.Companion.UNDEFINED_ID
 import com.belkanoid.shoppinglist.presentation.shoppingItem.viewModel.ShoppingItemViewModel
 
-class ShoppingItemActivity : AppCompatActivity() {
+class ShoppingItemActivity : AppCompatActivity(), ShoppingItemFragment.OnEditingFinishListener {
     private lateinit var binding: ActivityShoppingItemBinding
 
     private var screenMode: String = UNDEFINED_MODE
@@ -81,5 +81,9 @@ class ShoppingItemActivity : AppCompatActivity() {
             }
             return intent
         }
+    }
+
+    override fun onFinish() {
+        finish()
     }
 }
