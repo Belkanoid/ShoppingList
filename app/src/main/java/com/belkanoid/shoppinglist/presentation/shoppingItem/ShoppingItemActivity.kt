@@ -4,12 +4,9 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.ViewModelProvider
 import com.belkanoid.shoppinglist.R
 import com.belkanoid.shoppinglist.databinding.ActivityShoppingItemBinding
-import com.belkanoid.shoppinglist.domain.model.ShoppingItem.Companion.UNDEFINED_ID
-import com.belkanoid.shoppinglist.presentation.shoppingItem.viewModel.ShoppingItemViewModel
+import com.belkanoid.shoppinglist.domain.entity.ShoppingItem.Companion.UNDEFINED_ID
 
 class ShoppingItemActivity : AppCompatActivity(), ShoppingItemFragment.OnEditingFinishListener {
     private lateinit var binding: ActivityShoppingItemBinding

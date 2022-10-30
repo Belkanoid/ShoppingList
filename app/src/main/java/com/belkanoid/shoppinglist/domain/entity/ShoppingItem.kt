@@ -1,4 +1,4 @@
-package com.belkanoid.shoppinglist.domain.model
+package com.belkanoid.shoppinglist.domain.entity
 
 data class ShoppingItem(
     val name : String,
@@ -7,6 +7,6 @@ data class ShoppingItem(
     var id : Int = UNDEFINED_ID,
 ) {
     companion object {
-        const val UNDEFINED_ID = -1
+        const val UNDEFINED_ID = 0
     }
 }

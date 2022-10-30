@@ -4,7 +4,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.belkanoid.shoppinglist.R
-import com.belkanoid.shoppinglist.domain.model.ShoppingItem
+import com.belkanoid.shoppinglist.domain.entity.ShoppingItem
 
 class ShoppingItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 

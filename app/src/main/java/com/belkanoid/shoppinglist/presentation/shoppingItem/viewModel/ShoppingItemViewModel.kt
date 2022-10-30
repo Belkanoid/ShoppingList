@@ -1,18 +1,26 @@
 package com.belkanoid.shoppinglist.presentation.shoppingItem.viewModel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.belkanoid.shoppinglist.data.ShoppingListRepositoryImpl
-import com.belkanoid.shoppinglist.domain.model.ShoppingItem
+import com.belkanoid.shoppinglist.data.repositoryImpl.ShoppingListRepositoryImpl
+import com.belkanoid.shoppinglist.domain.entity.ShoppingItem
 import com.belkanoid.shoppinglist.domain.useCases.*
-import java.lang.RuntimeException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
-class ShoppingItemViewModel : ViewModel() {
-    private val repository = ShoppingListRepositoryImpl
+class ShoppingItemViewModel(application: Application) : AndroidViewModel(application) {
+    private val repository = ShoppingListRepositoryImpl(application)
     private val getAddShoppingItemUseCase = addShoppingItemUseCase(repository)
     private val getUpdateShoppingItemUseCase = updateShoppingItemUseCase(repository)
     private val getShoppingItemUseCase = getShoppingItemUseCase(repository)
+
+    private val scope = CoroutineScope(Dispatchers.IO)
+
 
     private val _errorInputName = MutableLiveData<Boolean>()
     val errorInputName : LiveData<Boolean>
@@ -31,7 +39,10 @@ class ShoppingItemViewModel : ViewModel() {
         get() = _shouldCloseScreen
 
     fun getShoppingItem(shoppingItemId : Int) {
-        _shoppingItem.value = getShoppingItemUseCase.execute(shoppingItemId)
+        scope.launch {
+            _shoppingItem.value = getShoppingItemUseCase.execute(shoppingItemId)
+
+        }
     }
 
     fun addShoppingItem(inputName : String?, inputCount : String?) {
@@ -40,7 +51,10 @@ class ShoppingItemViewModel : ViewModel() {
         val checkedInput = validateInput(name = name, count = count)
         if(checkedInput) {
             val shoppingItem = ShoppingItem(name, count, true)
-            getAddShoppingItemUseCase.execute(shoppingItem)
+            scope.launch {
+                getAddShoppingItemUseCase.execute(shoppingItem)
+
+            }
             finishWork()
         }
     }
@@ -52,7 +66,9 @@ class ShoppingItemViewModel : ViewModel() {
         if(checkedInput) {
             _shoppingItem.value?.let {
                 val shoppingItem = it.copy(name = name, count = count)
-                getUpdateShoppingItemUseCase.execute(shoppingItem)
+                scope.launch {
+                    getUpdateShoppingItemUseCase.execute(shoppingItem)
+                }
                 finishWork()
             }
 
@@ -90,4 +106,9 @@ class ShoppingItemViewModel : ViewModel() {
     fun resetErrorInputCount() { _errorInputCount.value = false}
 
     fun finishWork() { _shouldCloseScreen.value = Unit}
+
+    override fun onCleared() {
+        super.onCleared()
+        scope.cancel()
+    }
 }

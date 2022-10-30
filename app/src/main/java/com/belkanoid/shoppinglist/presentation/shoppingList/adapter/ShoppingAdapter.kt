@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.belkanoid.shoppinglist.R
-import com.belkanoid.shoppinglist.domain.model.ShoppingItem
+import com.belkanoid.shoppinglist.domain.entity.ShoppingItem
 import com.belkanoid.shoppinglist.presentation.shoppingList.adapter.utils.ShoppingItemDiffCallback
 import java.lang.RuntimeException
 

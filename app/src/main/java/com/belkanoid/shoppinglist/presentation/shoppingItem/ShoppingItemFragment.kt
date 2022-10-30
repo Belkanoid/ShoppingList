@@ -6,12 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.belkanoid.shoppinglist.R
 import com.belkanoid.shoppinglist.databinding.FragmentShoppingItemBinding
-import com.belkanoid.shoppinglist.domain.model.ShoppingItem.Companion.UNDEFINED_ID
+import com.belkanoid.shoppinglist.domain.entity.ShoppingItem.Companion.UNDEFINED_ID
 import com.belkanoid.shoppinglist.presentation.shoppingItem.viewModel.ShoppingItemViewModel
 
 
