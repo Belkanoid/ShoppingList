@@ -9,16 +9,26 @@ import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.belkanoid.shoppinglist.R
+import com.belkanoid.shoppinglist.ShoppingListApp
 import com.belkanoid.shoppinglist.databinding.FragmentShoppingItemBinding
 import com.belkanoid.shoppinglist.domain.entity.ShoppingItem.Companion.UNDEFINED_ID
+import com.belkanoid.shoppinglist.presentation.ViewModelFactory
 import com.belkanoid.shoppinglist.presentation.shoppingItem.viewModel.ShoppingItemViewModel
+import javax.inject.Inject
 
 
 class ShoppingItemFragment : Fragment() {
 
     private lateinit var binding :FragmentShoppingItemBinding
+
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+
     private val shoppingItemViewModel by lazy {
-        ViewModelProvider(this)[ShoppingItemViewModel::class.java]
+        ViewModelProvider(this, viewModelFactory)[ShoppingItemViewModel::class.java]
+    }
+
+    private val component by lazy {
+        (requireActivity().application as ShoppingListApp).component
     }
 
 
@@ -41,6 +51,7 @@ class ShoppingItemFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentShoppingItemBinding.inflate(inflater, container, false)
+        component.inject(this)
         return binding.root
     }
 

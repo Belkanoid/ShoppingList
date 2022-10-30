@@ -2,8 +2,9 @@ package com.belkanoid.shoppinglist.data.database.mapper
 
 import com.belkanoid.shoppinglist.data.database.dbEntity.ShoppingItemDbModel
 import com.belkanoid.shoppinglist.domain.entity.ShoppingItem
+import javax.inject.Inject
 
-class ShoppingListMapper {
+class ShoppingListMapper @Inject constructor() {
 
     fun mapEntityToDbModel(shoppingItem: ShoppingItem) = ShoppingItemDbModel(
         id = shoppingItem.id,
