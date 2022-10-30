@@ -1,9 +1,11 @@
 package com.belkanoid.shoppinglist.presentation.shoppingList.viewModel
 
 import android.app.Application
+import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.belkanoid.shoppinglist.data.repositoryImpl.ShoppingListRepositoryImpl
 import com.belkanoid.shoppinglist.domain.entity.ShoppingItem
 import com.belkanoid.shoppinglist.domain.useCases.*
@@ -11,35 +13,27 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+class MainViewModel @Inject constructor(
+    private val getShoppingListUseCase: getShoppingListUseCase,
+    private val getShoppingDeleteUseCase: deleteShoppingItemUseCase,
+    private val getUpdateShoppingItemUseCase: updateShoppingItemUseCase,
+) : ViewModel() {
 
-    private val repository = ShoppingListRepositoryImpl(application)
-
-    private val getShoppingListUseCase = getShoppingListUseCase(repository)
-    private val getShoppingDeleteUseCase = deleteShoppingItemUseCase(repository)
-    private val getUpdateShoppingItemUseCase = updateShoppingItemUseCase(repository)
-
-    private val scope = CoroutineScope(Dispatchers.IO)
-
-    val shoppingList : LiveData<List<ShoppingItem>> = getShoppingListUseCase.execute()
+    val shoppingList: LiveData<List<ShoppingItem>> = getShoppingListUseCase.execute()
 
     fun deleteShoppingItem(shoppingItem: ShoppingItem) {
-        scope.launch {
+        viewModelScope.launch {
             getShoppingDeleteUseCase.execute(shoppingItem)
         }
     }
 
     fun updateShoppingItem(shoppingItem: ShoppingItem) {
-        scope.launch {
+        viewModelScope.launch {
             val updatedShoppingItem = shoppingItem.copy(enabled = !shoppingItem.enabled)
             getUpdateShoppingItemUseCase.execute(updatedShoppingItem)
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        scope.cancel()
     }
 
 }

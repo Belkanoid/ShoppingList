@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.belkanoid.shoppinglist.data.database.dao.ShoppingListDao
 import com.belkanoid.shoppinglist.data.database.dbEntity.ShoppingItemDbModel
+import javax.inject.Inject
 
 @Database(entities = [ShoppingItemDbModel::class], version = 1, exportSchema = false)
 abstract class ShoppingListDatabase : RoomDatabase() {
@@ -36,8 +37,6 @@ abstract class ShoppingListDatabase : RoomDatabase() {
 
             INSTANCE = db
             return db
-
-
         }
     }
 }

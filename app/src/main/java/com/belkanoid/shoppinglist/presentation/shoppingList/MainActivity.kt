@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.belkanoid.shoppinglist.ShoppingListApp
 import com.belkanoid.shoppinglist.databinding.ActivityMainBinding
+import com.belkanoid.shoppinglist.presentation.ViewModelFactory
 import com.belkanoid.shoppinglist.presentation.shoppingItem.ShoppingItemActivity
 import com.belkanoid.shoppinglist.presentation.shoppingItem.ShoppingItemFragment
 import com.belkanoid.shoppinglist.presentation.shoppingList.adapter.ShoppingAdapter
@@ -14,18 +16,29 @@ import com.belkanoid.shoppinglist.presentation.shoppingList.adapter.ShoppingAdap
 import com.belkanoid.shoppinglist.presentation.shoppingList.adapter.ShoppingAdapter.Companion.ENABLED_VIEW_TYPE
 import com.belkanoid.shoppinglist.presentation.shoppingList.adapter.ShoppingAdapter.Companion.MAX_POOL_SIZE
 import com.belkanoid.shoppinglist.presentation.shoppingList.viewModel.MainViewModel
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), ShoppingItemFragment.OnEditingFinishListener {
     private lateinit var binding: ActivityMainBinding
+
+    @Inject lateinit var viewModelFactory : ViewModelFactory
+
     private val mainViewModel by lazy {
-        ViewModelProvider(this)[MainViewModel::class.java]
+        ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
     }
+
+    private val component by lazy {
+        (application as ShoppingListApp).component
+    }
+
     private lateinit var shoppingAdapter: ShoppingAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        component.inject(this)
+
 
         mainViewModel.shoppingList.observe(this) {
             shoppingAdapter.submitList(it)
