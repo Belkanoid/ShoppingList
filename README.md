@@ -1,5 +1,5 @@
 # ShoppingList
-DAGGER2, Coroutines, Room
+DAGGER2, Coroutines, Room, Clean Arch.
 
 
 ![image](https://user-images.githubusercontent.com/69011601/198892747-718d0c71-ea74-45db-8024-a823ccf9ca6e.png)
